@@ -1,1 +1,141 @@
-<!DOCTYPE html> <html lang="ko"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>AI Narrative Player</title> <script src="https://cdn.tailwindcss.com"></script> <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"> <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <style> body { font-family: 'Noto Sans KR', sans-serif; } .vignette-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9) 100%); } .game-text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9); } .choice-button { transition: all 0.2s ease; background-color: rgba(17, 24, 39, 0.7); backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.2); } .choice-button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); background-color: rgba(31, 41, 55, 0.9); } .nav-button { transition: background-color 0.2s ease; } .nav-button:hover { background-color: rgba(255, 255, 255, 0.2); } .fade-in { animation: fadeIn 0.5s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } } </style> </head> <body class="bg-black text-white"> <div id="loading-screen" class="w-full h-screen flex flex-col items-center justify-center"> <h1 id="story-title" class="text-3xl font-bold mb-4">ì�´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...</h1> <p class="text-gray-400">ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”.</p> </div> <div id="game-container" class="relative w-full h-screen overflow-hidden hidden"></div> <script> const SUPABASE_URL = 'https://obbmtrxhmhokzvuxdqlc.supabase.co'; const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iYm10cnhobWhva3p2dXhkcWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjE5MjEsImV4cCI6MjA2NTA5NzkyMX0.xBkkJ41u6mTLu2YaUtuWUxsv5PwyQR6yyMQNM6fAPfQ'; const { createClient } = supabase; const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY); let storyData = {}; let gameState = { currentNodeKey: 'chapter_0', currentPage: 0 }; document.addEventListener('DOMContentLoaded', async () => { const params = new URLSearchParams(window.location.search); const storyId = params.get('story_id'); const userId = params.get('user_id'); if (!storyId || !userId) { document.getElementById('story-title').textContent = 'ì˜¤ë¥˜'; document.getElementById('loading-screen').querySelector('p').textContent = 'ìž˜ëª»ë�œ ì ‘ê·¼ìž…ë‹ˆë‹¤. ê³µìœ ë°›ì�€ ë§�í�¬ê°€ ì •í™•í•œì§€ í™•ì�¸í•´ì£¼ì„¸ìš”.'; return; } const { data, error } = await supabaseClient .from('stories') .select('content') .eq('id', storyId) .eq('user_id', userId) .single(); if (error || !data) { console.error('Error fetching story:', error); document.getElementById('story-title').textContent = 'ì˜¤ë¥˜'; document.getElementById('loading-screen').querySelector('p').textContent = 'ì�´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ë�° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.'; return; } storyData = data.content; document.title = storyData.title || 'AI Narrative Player'; document.getElementById('story-title').textContent = storyData.title; document.getElementById('loading-screen').classList.add('hidden'); document.getElementById('game-container').classList.remove('hidden'); showNode('chapter_0'); }); // The rest of the player logic (showNode, renderPage, etc.) goes here. </script> </body> </html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Narrative Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .vignette-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.9) 100%); }
+        .game-text-shadow { text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9); }
+        .choice-button { transition: all 0.2s ease; background-color: rgba(17, 24, 39, 0.7); backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .choice-button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); background-color: rgba(31, 41, 55, 0.9); }
+        .nav-button { transition: background-color 0.2s ease; } .nav-button:hover { background-color: rgba(255, 255, 255, 0.2); }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <div id="loading-screen" class="w-full h-screen flex flex-col items-center justify-center">
+        <h1 id="story-title" class="text-3xl font-bold mb-4">ì´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...</h1>
+        <p class="text-gray-400">ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”.</p>
+    </div>
+    <div id="game-container" class="relative w-full h-screen overflow-hidden hidden"></div>
+<script>
+    const SUPABASE_URL = 'https://obbmtrxhmhokzvuxdqlc.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iYm10cnhobWhva3p2dXhkcWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjE5MjEsImV4cCI6MjA2NTA5NzkyMX0.xBkkJ41u6mTLu2YaUtuWUxsv5PwyQR6yyMQNM6fAPfQ';
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let storyData = {};
+    let gameState = { currentNodeKey: 'chapter_0', currentPage: 0, currentNodeObject: null };
+    let settings = { fontSize: 1.125 };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const storyId = params.get('story_id');
+        const userId = params.get('user_id');
+
+        if (!storyId || !userId) {
+            document.getElementById('story-title').textContent = 'ì˜¤ë¥˜';
+            document.getElementById('loading-screen').querySelector('p').textContent = 'ìž˜ëª»ëœ ì ‘ê·¼ìž…ë‹ˆë‹¤. ê³µìœ ë°›ì€ ë§í¬ê°€ ì •í™•í•œì§€ í™•ì¸í•´ì£¼ì„¸ìš”.';
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from('stories')
+            .select('content')
+            .eq('id', storyId)
+            .eq('user_id', userId)
+            .single();
+
+        if (error || !data) {
+            console.error('Error fetching story:', error);
+            document.getElementById('story-title').textContent = 'ì˜¤ë¥˜';
+            document.getElementById('loading-screen').querySelector('p').textContent = 'ì´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.';
+            return;
+        }
+        
+        storyData = data.content;
+        document.title = storyData.title || 'AI Narrative Player';
+        document.getElementById('story-title').textContent = storyData.title;
+        
+        document.getElementById('loading-screen').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+
+        showNode('chapter_0');
+    });
+
+    function showNode(nodeKey) {
+        const gameContainer = document.getElementById('game-container');
+        if (!nodeKey || !storyData.story[nodeKey]) {
+            gameContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black">
+                    <h1 class="text-3xl font-bold mb-4">The End</h1>
+                    <p class="text-xl text-gray-300">ì´ì•¼ê¸°ê°€ ëë‚¬ìŠµë‹ˆë‹¤. í”Œë ˆì´í•´ì£¼ì…”ì„œ ê°ì‚¬í•©ë‹ˆë‹¤.</p>
+                </div>`;
+            return;
+        }
+        gameState.currentNodeKey = nodeKey;
+        gameState.currentNodeObject = storyData.story[nodeKey];
+        gameState.currentPage = 0;
+        renderPage();
+    }
+
+    function renderPage() {
+        const gameContainer = document.getElementById('game-container');
+        const node = gameState.currentNodeObject;
+        if (!node || !node.content) return;
+
+        const pageContent = node.content[gameState.currentPage];
+        const isLastPage = gameState.currentPage >= node.content.length - 1;
+
+        let choicesHTML = '';
+        if (isLastPage) {
+            choicesHTML = '<div class="mt-8 space-y-4 w-full max-w-2xl fade-in">';
+            node.choices.forEach(choice => {
+                choicesHTML += `<button class="choice-button w-full text-left p-4 rounded-lg text-lg" onclick="showNode('${choice.next_node}')">${choice.text}</button>`;
+            });
+            choicesHTML += '</div>';
+        }
+
+        gameContainer.innerHTML = `
+            <div class="absolute inset-0 bg-cover bg-center transition-opacity duration-1000" style="background-image: url('${node.image_url}');"></div>
+            <div class="absolute inset-0 bg-black bg-opacity-50 vignette-overlay"></div>
+            <div class="relative w-full h-full flex flex-col justify-end items-center p-4 sm:p-8 pb-16">
+                <div class="w-full max-w-4xl text-center mb-8 fade-in">
+                    <p id="game-text" class="game-text-shadow text-lg sm:text-xl md:text-2xl leading-relaxed" style="font-size: ${settings.fontSize}rem;">${pageContent}</p>
+                </div>
+                ${choicesHTML}
+                <div class="absolute bottom-4 right-4 flex space-x-2">
+                    ${gameState.currentPage > 0 ? '<button id="prev-btn" class="nav-button rounded-full p-2 bg-black/30"><i data-lucide="chevron-left"></i></button>' : ''}
+                    ${!isLastPage ? '<button id="next-btn" class="nav-button rounded-full p-2 bg-black/30"><i data-lucide="chevron-right"></i></button>' : ''}
+                </div>
+                <div class="absolute bottom-4 left-4 text-white/50 text-sm">${gameState.currentPage + 1} / ${node.content.length}</div>
+            </div>`;
+        
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        if (!isLastPage) {
+            document.getElementById('next-btn')?.addEventListener('click', handleNextPage);
+        }
+        document.getElementById('prev-btn')?.addEventListener('click', handlePrevPage);
+    }
+
+    function handleNextPage() {
+        if (gameState.currentPage < gameState.currentNodeObject.content.length - 1) {
+            gameState.currentPage++;
+            renderPage();
+        }
+    }
+    function handlePrevPage() {
+        if (gameState.currentPage > 0) {
+            gameState.currentPage--;
+            renderPage();
+        }
+    }
+</script>
+</body>
+</html>
