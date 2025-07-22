@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Narrative Player</title>
+    <title>무림맹주 이정원, 현대인의 좌충우돌 무림 정복기</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
@@ -19,53 +18,86 @@
     </style>
 </head>
 <body class="bg-black text-white">
-    <div id="loading-screen" class="w-full h-screen flex flex-col items-center justify-center">
-        <h1 id="story-title" class="text-3xl font-bold mb-4">ì´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ì¤‘...</h1>
-        <p class="text-gray-400">ìž ì‹œë§Œ ê¸°ë‹¤ë ¤ì£¼ì„¸ìš”.</p>
-    </div>
-    <div id="game-container" class="relative w-full h-screen overflow-hidden hidden"></div>
+    <div id="game-container" class="relative w-full h-screen overflow-hidden"></div>
 <script>
-    const SUPABASE_URL = 'https://obbmtrxhmhokzvuxdqlc.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9iYm10cnhobWhva3p2dXhkcWxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MjE5MjEsImV4cCI6MjA2NTA5NzkyMX0.xBkkJ41u6mTLu2YaUtuWUxsv5PwyQR6yyMQNM6fAPfQ';
-    const { createClient } = supabase;
-    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let storyData = {};
+    const storyData = {
+  "title": "무림맹주 이정원, 현대인의 좌충우돌 무림 정복기",
+  "setting": "고대 무협 세계와 현대 사회의 지식이 혼합된 퓨전 무협 세계. 무림맹을 중심으로 강호가 유지되지만, 암투와 음모가 끊이지 않는다.",
+  "synopsis": "평범한 현대 직장인 이정원은 우연히 얻은 고대의 비급을 통해 무림 세계로 차원이동한다. 얼떨결에 무림맹주가 된 그는 현대인의 합리적인 사고방식과 뛰어난 사업 감각으로 무림을 혁신하려 하지만, 전통적인 무림의 관습과 끊임없이 충돌하며 좌충우돌 성장해 나간다.",
+  "ending": "이정원은 무림맹을 성공적으로 혁신하고, 무림의 평화를 가져오며, 동시에 자신의 현대적인 가치관을 무림에 성공적으로 정착시킨다. 그는 무림과 현대 사회를 잇는 가교 역할을 하며 새로운 시대의 맹주로 거듭난다.",
+  "characters": [
+    {
+      "name": "이정원",
+      "role": "player",
+      "description": "현대 사회에서 평범한 직장인이었으나, 무림 세계로 차원이동 후 무림맹주가 된다. 합리적이고 효율적인 사고방식을 가지고 있으며, 사업 감각이 뛰어나다. 때로는 어리숙하지만, 정의감 넘치는 성격.",
+      "status": "혼란스러움"
+    },
+    {
+      "name": "묵향",
+      "role": "main",
+      "description": "무림맹의 고수이자 이정원을 보좌하는 냉철한 미녀 검사. 뛰어난 무공 실력과 판단력을 지녔지만, 현대인의 사고방식을 이해하지 못해 이정원과 자주 충돌한다.",
+      "status": "경계심을 품고 있음"
+    },
+    {
+      "name": "장삼봉",
+      "role": "supporting",
+      "description": "무림의 원로이자 덕망 높은 도사. 이정원의 기발한 아이디어에 흥미를 느끼고 물심양면으로 돕는다. 해박한 지식과 뛰어난 통찰력을 지녔다.",
+      "status": "호의적임"
+    },
+    {
+      "name": "마교 교주",
+      "role": "supporting",
+      "description": "무림을 혼란에 빠뜨리려는 야심가. 겉으로는 온화하지만, 속으로는 냉혹하고 잔인하다. 이정원의 혁신적인 정책을 방해하며 끊임없이 위협을 가한다.",
+      "status": "적대적임"
+    }
+  ],
+  "plan": [
+    "1장: 운명적인 만남 - 차원이동과 무림맹주 즉위",
+    "2장: 현대인의 시각 - 무림맹 개혁의 시작",
+    "3장: 첫 번째 난관 - 고수들의 반발과 암투",
+    "4장: 사업 수완 발휘 - 상업을 통한 무림 재건",
+    "5장: 묵향과의 갈등 - 이해와 협력의 시작",
+    "6장: 마교의 등장 - 새로운 위협의 그림자",
+    "7장: 장삼봉의 도움 - 고수와의 만남과 가르침",
+    "8장: 무림맹의 위기 - 마교의 음모와 함정"
+  ],
+  "story": {
+    "chapter_0": {
+      "title": "1장: 운명적인 만남 - 차원이동과 무림맹주 즉위",
+      "image_prompt": "A bewildered man in a modern suit stands in the middle of a grand hall filled with people in traditional martial arts attire. Banners with ancient symbols hang from the ceiling, and a wizened old man with a long white beard looks at him with a curious expression.",
+      "image_url": "https://obbmtrxhmhokzvuxdqlc.supabase.co/storage/v1/object/public/images/cde49d09-275f-439d-86a0-1019fe71da5d/main_story/chapter_0-1753226875270.png",
+      "content": [
+        "눈을 떴을 때는 낯선 천장이 보였다. 아니, 천장이라기보다는 거대한 홀의 웅장한 지붕이라고 해야 할까. 온통 처음 보는 복장을 한 사람들이 나를 둘러싸고 있었고, 그들의 시선은 하나같이 당혹스러움과 경계심으로 가득 차 있었다. 어쩌다 내가 이런 곳에...?",
+        "혼란스러운 와중에 가장 먼저 눈에 들어온 것은 백발이 성성한 노인이었다. 그는 마치 오래된 책에서 튀어나온 듯한 도포를 입고 있었고, 온화하면서도 깊이를 알 수 없는 눈빛으로 나를 응시하고 있었다. 노인의 옆에는 차가운 눈빛을 한 아름다운 여인이 서 있었다. 그녀의 손에는 날카로운 검이 들려 있었다.",
+        "노인이 나에게 다가와 정중하게 고개를 숙였다. \"이정원 맹주님, 드디어 깨어나셨군요. 부디 옥좌에 앉으시어 무림맹을 이끌어 주십시오.\" 맹주? 내가? 얼떨떨한 기분으로 옥좌라고 불리는 화려한 의자에 앉았다. 상황 파악도 제대로 되지 않은 채, 나는 졸지에 무림맹주가 되어 버린 것이다.",
+        "그때, 홀의 문이 쾅 소리를 내며 열렸다. 붉은색과 검은색이 뒤섞인 기괴한 복장을 한 무리가 몰려 들어왔고, 그들의 선두에는 험악한 인상의 남자가 서 있었다. \"무림맹주라… 하! 풋내기 녀석이 감히 무림을 이끌겠다고? 오늘 여기서 네놈의 목을 베어 마교의 위엄을 떨치리라!\"",
+        "마교 교주의 등장에 홀 안은 순식간에 긴장감으로 가득 찼다. 묵향이라 불린 여인은 즉시 검을 뽑아 들었고, 장삼봉이라 불린 노인은 가볍게 한숨을 쉬었다. 하지만 나는 아직까지도 상황 파악이 되지 않았다. 싸워야 하는 건가? 도망쳐야 하는 건가? 아니, 그보다… 대체 뭘 해야 하는 거지?"
+      ],
+      "choices": [
+        {
+          "text": "\"잠깐! 이야기는 좀 하고 싸우자!\"",
+          "next_node": "chapter_1"
+        },
+        {
+          "text": "\"무림맹주고 뭐고, 난 집에 갈래!\"",
+          "next_node": "chapter_1"
+        }
+      ]
+    }
+  },
+  "currentStep": 1,
+  "gameplay": {
+    "fontSize": 1.125
+  },
+  "ui": {
+    "isLoading": false,
+    "statusText": "챕터 1 이미지 생성 중..."
+  }
+};
     let gameState = { currentNodeKey: 'chapter_0', currentPage: 0, currentNodeObject: null };
-    let settings = { fontSize: 1.125 };
+    let settings = storyData.gameplay || { fontSize: 1.125 };
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        const params = new URLSearchParams(window.location.search);
-        const storyId = params.get('story_id');
-        const userId = params.get('user_id');
-
-        if (!storyId || !userId) {
-            document.getElementById('story-title').textContent = 'ì˜¤ë¥˜';
-            document.getElementById('loading-screen').querySelector('p').textContent = 'ìž˜ëª»ëœ ì ‘ê·¼ìž…ë‹ˆë‹¤. ê³µìœ ë°›ì€ ë§í¬ê°€ ì •í™•í•œì§€ í™•ì¸í•´ì£¼ì„¸ìš”.';
-            return;
-        }
-
-        const { data, error } = await supabaseClient
-            .from('stories')
-            .select('content')
-            .eq('id', storyId)
-            .eq('user_id', userId)
-            .single();
-
-        if (error || !data) {
-            console.error('Error fetching story:', error);
-            document.getElementById('story-title').textContent = 'ì˜¤ë¥˜';
-            document.getElementById('loading-screen').querySelector('p').textContent = 'ì´ì•¼ê¸°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ë° ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.';
-            return;
-        }
-        
-        storyData = data.content;
-        document.title = storyData.title || 'AI Narrative Player';
-        document.getElementById('story-title').textContent = storyData.title;
-        
-        document.getElementById('loading-screen').classList.add('hidden');
-        document.getElementById('game-container').classList.remove('hidden');
-
+    document.addEventListener('DOMContentLoaded', () => {
         showNode('chapter_0');
     });
 
@@ -74,7 +106,7 @@
         if (!nodeKey || !storyData.story[nodeKey]) {
             gameContainer.innerHTML = `<div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black">
                     <h1 class="text-3xl font-bold mb-4">The End</h1>
-                    <p class="text-xl text-gray-300">ì´ì•¼ê¸°ê°€ ëë‚¬ìŠµë‹ˆë‹¤. í”Œë ˆì´í•´ì£¼ì…”ì„œ ê°ì‚¬í•©ë‹ˆë‹¤.</p>
+                    <p class="text-xl text-gray-300">이야기가 끝났습니다. 플레이해주셔서 감사합니다.</p>
                 </div>`;
             return;
         }
